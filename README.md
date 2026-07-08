@@ -1,159 +1,182 @@
-# Turborepo starter
+# ai-agent
 
-This Turborepo starter is maintained by the Turborepo core team.
+基于 **pnpm + Turborepo** 的 monorepo 项目，包含用户端 Web、管理后台 Admin，以及 Cloudflare Workers API 服务，共享 UI 组件库与工程化配置。
 
-## Using this example
+## 技术栈
 
-Run the following command:
+| 类别 | 技术 |
+|------|------|
+| 包管理 | pnpm workspace + catalog 统一版本 |
+| 构建编排 | Turborepo |
+| 前端框架 | Next.js 16（Turbopack）+ React 19 |
+| 样式 | Tailwind CSS v4 + PostCSS |
+| API | Hono + Cloudflare Workers（Wrangler） |
+| 语言 | TypeScript |
+| 代码规范 | ESLint + Prettier |
 
-```sh
-npx create-turbo@latest
+## 项目结构
+
+```
+ai-agent/
+├── apps/
+│   ├── web/          # 用户端 Next.js 应用（端口 3005）
+│   ├── admin/        # 管理后台 Next.js 应用（端口 3006）
+│   └── api/          # Cloudflare Workers API（端口 8787）
+├── packages/
+│   ├── ui/           # 共享 React 组件与设计 token（theme.css）
+│   ├── eslint-config/# 共享 ESLint 配置
+│   └── typescript-config/  # 共享 TS 配置
+├── pnpm-workspace.yaml     # workspace 与 catalog 版本定义
+├── turbo.json              # Turborepo 任务配置
+└── .npmrc                  # pnpm 配置（Tailwind 依赖提升）
 ```
 
-## What's inside?
+### 应用说明
 
-This Turborepo includes the following packages/apps:
+- **web**：面向用户的 Next.js 应用，引用 `@repo/ui` 共享组件
+- **admin**：管理后台，与 web 共用 UI 库和 Tailwind 主题
+- **api**：基于 Hono 的 Worker 服务，提供 `/health` 等接口
 
-### Apps and Packages
+### 共享包说明
 
-- `docs`: a [Next.js](https://nextjs.org/) app
-- `web`: another [Next.js](https://nextjs.org/) app
-- `@repo/ui`: a stub React component library shared by both `web` and `docs` applications
-- `@repo/eslint-config`: `eslint` configurations (includes `eslint-config-next` and `eslint-config-prettier`)
-- `@repo/typescript-config`: `tsconfig.json`s used throughout the monorepo
+- **@repo/ui**：共享 React 组件（如 `button`、`card`、`tailwind-demo`）及 `theme.css` 设计 token
+- **@repo/eslint-config**：ESLint 规则（含 Next.js、React 场景）
+- **@repo/typescript-config**：各子项目的 `tsconfig` 基座
 
-Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
+## 环境要求
 
-### Utilities
+- Node.js >= 18
+- pnpm 10（项目已锁定版本，推荐使用 Corepack）
 
-This Turborepo has some additional tools already setup for you:
-
-- [TypeScript](https://www.typescriptlang.org/) for static type checking
-- [ESLint](https://eslint.org/) for code linting
-- [Prettier](https://prettier.io) for code formatting
-
-### Build
-
-To build all apps and packages, run the following command:
-
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed (recommended):
-
-```sh
-cd my-turborepo
-turbo build
+```bash
+corepack enable
+corepack prepare pnpm@10.33.2 --activate
 ```
 
-Without global `turbo`, use your package manager:
+## 快速开始
 
-```sh
-cd my-turborepo
-npx turbo build
-pnpm dlx turbo build
-pnpm exec turbo build
+### 安装依赖
+
+在仓库根目录执行：
+
+```bash
+pnpm install
 ```
 
-You can build a specific package by using a [filter](https://turborepo.dev/docs/crafting-your-repository/running-tasks#using-filters):
+### 启动开发服务
 
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed:
+推荐单独启动某个应用（避免 Turborepo TUI 额外开销）：
 
-```sh
-turbo build --filter=docs
+```bash
+pnpm run dev:web     # http://localhost:3005
+pnpm run dev:admin   # http://localhost:3006
+pnpm run dev:api     # http://localhost:8787
 ```
 
-Without global `turbo`:
+也可一次性启动所有 dev 任务：
 
-```sh
-npx turbo build --filter=docs
-pnpm exec turbo build --filter=docs
-pnpm exec turbo build --filter=docs
+```bash
+pnpm run dev
 ```
 
-### Develop
+### 构建
 
-To develop all apps and packages, run the following command:
+```bash
+# 构建全部
+pnpm run build
 
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed (recommended):
-
-```sh
-cd my-turborepo
-turbo dev
+# 构建单个应用
+pnpm --filter web build
+pnpm --filter admin build
 ```
 
-Without global `turbo`, use your package manager:
+### 代码检查
 
-```sh
-cd my-turborepo
-npx turbo dev
-pnpm exec turbo dev
-pnpm exec turbo dev
+```bash
+pnpm run lint          # ESLint
+pnpm run check-types   # TypeScript 类型检查
+pnpm run format        # Prettier 格式化
 ```
 
-You can develop a specific package by using a [filter](https://turborepo.dev/docs/crafting-your-repository/running-tasks#using-filters):
+## 本地开发地址
 
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed:
+| 应用 | 地址 | 命令 |
+|------|------|------|
+| web | http://localhost:3005 | `pnpm run dev:web` |
+| admin | http://localhost:3006 | `pnpm run dev:admin` |
+| api | http://localhost:8787 | `pnpm run dev:api` |
 
-```sh
-turbo dev --filter=web
+API 健康检查：
+
+```bash
+curl http://localhost:8787/health
+# {"ok":true,"service":"api"}
 ```
 
-Without global `turbo`:
+## Tailwind CSS 配置说明
 
-```sh
-npx turbo dev --filter=web
-pnpm exec turbo dev --filter=web
-pnpm exec turbo dev --filter=web
+本项目使用 **Tailwind CSS v4**，各 Next 应用独立配置 PostCSS，共享 UI 包提供主题 token。
+
+- 各 app 的 `postcss.config.mjs` 使用 `@tailwindcss/postcss`
+- `packages/ui/src/theme.css` 定义共享 `@theme` 变量
+- 各 app 的 `globals.css` 通过 `@import "@repo/ui/theme.css"` 引入主题
+- 使用 `@source` 限定扫描范围（仅 app 目录 + `packages/ui`），避免 monorepo 下扫描过大导致 dev 卡顿
+
+版本通过 `pnpm-workspace.yaml` 的 catalog 统一管理：
+
+```yaml
+tailwindcss: ^4.1.15
+'@tailwindcss/postcss': ^4.1.15
 ```
 
-### Remote Caching
+## 部署 API
 
-> [!TIP]
-> Vercel Remote Cache is free for all plans. Get started today at [vercel.com](https://vercel.com/signup?utm_source=remote-cache-sdk&utm_campaign=free_remote_cache).
-
-Turborepo can use a technique known as [Remote Caching](https://turborepo.dev/docs/core-concepts/remote-caching) to share cache artifacts across machines, enabling you to share build caches with your team and CI/CD pipelines.
-
-By default, Turborepo will cache locally. To enable Remote Caching you will need an account with Vercel. If you don't have an account you can [create one](https://vercel.com/signup?utm_source=turborepo-examples), then enter the following commands:
-
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed (recommended):
-
-```sh
-cd my-turborepo
-turbo login
+```bash
+pnpm --filter api deploy
 ```
 
-Without global `turbo`, use your package manager:
+生成 Cloudflare Worker 类型：
 
-```sh
-cd my-turborepo
-npx turbo login
-pnpm exec turbo login
-pnpm exec turbo login
+```bash
+pnpm --filter api cf-typegen
 ```
 
-This will authenticate the Turborepo CLI with your [Vercel account](https://vercel.com/docs/concepts/personal-accounts/overview).
+## 常见问题
 
-Next, you can link your Turborepo to your Remote Cache by running the following command from the root of your Turborepo:
+### 端口被占用（EADDRINUSE）
 
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed:
+重启 dev 前旧进程可能未退出，先释放端口：
 
-```sh
-turbo link
+```bash
+lsof -ti :3005 | xargs kill -9   # web
+lsof -ti :3006 | xargs kill -9   # admin
+lsof -ti :8787 | xargs kill -9   # api
 ```
 
-Without global `turbo`:
+### dev 首次加载较慢
 
-```sh
-npx turbo link
-pnpm exec turbo link
-pnpm exec turbo link
+Next.js dev 模式下，Tailwind PostCSS 首次编译需要几秒，属正常现象。若持续卡顿，可尝试：
+
+```bash
+rm -rf apps/web/.next apps/admin/.next
+pnpm run dev:web   # 或 dev:admin
 ```
 
-## Useful Links
+### 依赖版本管理
 
-Learn more about the power of Turborepo:
+子项目引用 catalog 版本，例如：
 
-- [Tasks](https://turborepo.dev/docs/crafting-your-repository/running-tasks)
-- [Caching](https://turborepo.dev/docs/crafting-your-repository/caching)
-- [Remote Caching](https://turborepo.dev/docs/core-concepts/remote-caching)
-- [Filtering](https://turborepo.dev/docs/crafting-your-repository/running-tasks#using-filters)
-- [Configuration Options](https://turborepo.dev/docs/reference/configuration)
-- [CLI Usage](https://turborepo.dev/docs/reference/command-line-reference)
+```json
+"react": "catalog:",
+"tailwindcss": "catalog:"
+```
+
+新增 catalog 依赖时，需同时更新 `pnpm-workspace.yaml` 和对应 `package.json`，然后重新 `pnpm install`。
+
+## 相关链接
+
+- [Turborepo 文档](https://turborepo.dev/docs)
+- [Next.js 文档](https://nextjs.org/docs)
+- [Tailwind CSS v4 文档](https://tailwindcss.com/docs)
+- [Hono 文档](https://hono.dev/)
+- [Cloudflare Workers 文档](https://developers.cloudflare.com/workers/)
