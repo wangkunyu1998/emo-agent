@@ -16,7 +16,8 @@
     "next": "16.2.4",
     "react": "catalog:",
     "react-dom": "^19.2.5",
-    "tailwindcss": "catalog:"
+    "tailwindcss": "catalog:",
+    "zod": "catalog:"
   },
   "devDependencies": {
     "@repo/eslint-config": "workspace:*",

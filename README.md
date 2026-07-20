@@ -63,6 +63,36 @@ corepack prepare pnpm@10.33.2 --activate
 pnpm install
 ```
 
+### 环境变量
+
+本地开发前，为 web / admin 从 example 复制出 development 配置（真实 `.env.*` 已 gitignore，勿提交）：
+
+```bash
+cp apps/web/.env.example apps/web/.env.development
+cp apps/admin/.env.example apps/admin/.env.development
+```
+
+三环境说明：
+
+| 环境 | web / admin | api |
+|------|-------------|-----|
+| development | `.env.development`（本地可跑，API 指向 `http://127.0.0.1:8787`） | `wrangler.jsonc` 顶层 `vars.APP_ENV` |
+| test | `.env.test`（占位符） | `wrangler.jsonc` → `env.test.vars` |
+| production | `.env.production`（占位符） | `wrangler.jsonc` → `env.production.vars` |
+
+读取约定：
+
+- **api**（Cloudflare Worker）：从 `c.env` 读取 Wrangler `vars` / bindings
+- **web / admin**（Next.js）：服务端读 `process.env`，浏览器读 `process.env.NEXT_PUBLIC_*`
+
+api 部署到不同环境：
+
+```bash
+pnpm --filter api deploy              # 默认（development vars）
+pnpm --filter api deploy:test         # wrangler deploy --env test
+pnpm --filter api deploy:production   # wrangler deploy --env production
+```
+
 ### 启动开发服务
 
 推荐单独启动某个应用（避免 Turborepo TUI 额外开销）：
@@ -110,7 +140,7 @@ API 健康检查：
 
 ```bash
 curl http://localhost:8787/health
-# {"ok":true,"service":"api"}
+# {"ok":true,"service":"api","appEnv":"development"}
 ```
 
 ## Tailwind CSS 配置说明
@@ -132,7 +162,9 @@ tailwindcss: ^4.1.15
 ## 部署 API
 
 ```bash
-pnpm --filter api deploy
+pnpm --filter api deploy              # 默认（development vars）
+pnpm --filter api deploy:test         # test 环境
+pnpm --filter api deploy:production   # production 环境
 ```
 
 生成 Cloudflare Worker 类型：

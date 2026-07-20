@@ -1,9 +1,15 @@
 import { Hono } from 'hono';
+import { getApiEnv } from '../env';
 
-const app = new Hono();
+type Bindings = {
+  APP_ENV: 'development' | 'test' | 'production';
+};
+
+const app = new Hono<{ Bindings: Bindings }>();
 
 app.get('/health', (c) => {
-  return c.json({ ok: true, service: 'api' });
+  const env = getApiEnv(c.env);
+  return c.json({ ok: true, service: 'api', appEnv: env.APP_ENV });
 });
 
 export default app;
