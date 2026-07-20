@@ -4,6 +4,7 @@
   "scripts": {
     "build": "turbo run build",
     "dev": "turbo run dev",
+    "dev:apps": "turbo run dev --filter=web --filter=admin",
     "dev:web": "pnpm --filter web dev",
     "dev:admin": "pnpm --filter admin dev",
     "dev:api": "pnpm --filter api dev",
