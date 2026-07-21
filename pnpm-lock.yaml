@@ -127,18 +127,30 @@ importers:
         specifier: 'catalog:'
         version: 4.4.3
     devDependencies:
+      typescript:
+        specifier: 'catalog:'
+        version: 5.9.2
       wrangler:
         specifier: ^4.4.0
         version: 4.86.0
 
   apps/web:
     dependencies:
+      '@repo/api':
+        specifier: workspace:*
+        version: link:../api
+      '@repo/contracts':
+        specifier: workspace:*
+        version: link:../../packages/contracts
       '@repo/ui':
         specifier: workspace:*
         version: link:../../packages/ui
       '@tailwindcss/postcss':
         specifier: 'catalog:'
         version: 4.3.2
+      hono:
+        specifier: ^4.12.15
+        version: 4.12.15
       next:
         specifier: 16.2.4
         version: 16.2.4(react-dom@19.2.5(react@19.2.5))(react@19.2.5)

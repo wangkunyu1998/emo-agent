@@ -11,8 +11,11 @@
     "check-types": "next typegen && tsc --noEmit"
   },
   "dependencies": {
+    "@repo/api": "workspace:*",
+    "@repo/contracts": "workspace:*",
     "@repo/ui": "workspace:*",
     "@tailwindcss/postcss": "catalog:",
+    "hono": "^4.12.15",
     "next": "16.2.4",
     "react": "catalog:",
     "react-dom": "^19.2.5",

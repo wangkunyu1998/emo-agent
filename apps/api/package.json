@@ -1,6 +1,9 @@
 {
-  "name": "api",
+  "name": "@repo/api",
   "type": "module",
+  "exports": {
+    ".": "./src/app.ts"
+  },
   "scripts": {
     "dev": "wrangler dev --port 8787",
     "deploy": "wrangler deploy --minify",
@@ -14,6 +17,7 @@
     "zod": "catalog:"
   },
   "devDependencies": {
-    "wrangler": "^4.4.0"
+    "wrangler": "^4.4.0",
+    "typescript": "catalog:"
   }
 }

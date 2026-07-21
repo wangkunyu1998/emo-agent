@@ -88,9 +88,9 @@ cp apps/admin/.env.example apps/admin/.env.development
 api 部署到不同环境：
 
 ```bash
-pnpm --filter api deploy              # 默认（development vars）
-pnpm --filter api deploy:test         # wrangler deploy --env test
-pnpm --filter api deploy:production   # wrangler deploy --env production
+pnpm --filter @repo/api deploy              # 默认（development vars）
+pnpm --filter @repo/api deploy:test         # wrangler deploy --env test
+pnpm --filter @repo/api deploy:production   # wrangler deploy --env production
 ```
 
 ### 启动开发服务
@@ -162,15 +162,15 @@ tailwindcss: ^4.1.15
 ## 部署 API
 
 ```bash
-pnpm --filter api deploy              # 默认（development vars）
-pnpm --filter api deploy:test         # test 环境
-pnpm --filter api deploy:production   # production 环境
+pnpm --filter @repo/api deploy              # 默认（development vars）
+pnpm --filter @repo/api deploy:test         # test 环境
+pnpm --filter @repo/api deploy:production   # production 环境
 ```
 
 生成 Cloudflare Worker 类型：
 
 ```bash
-pnpm --filter api cf-typegen
+pnpm --filter @repo/api cf-typegen
 ```
 
 ## 常见问题
