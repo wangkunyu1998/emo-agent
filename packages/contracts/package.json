@@ -4,7 +4,12 @@
   "private": true,
   "type": "module",
   "exports": {
-    ".": "./src/index.ts"
+    ".": "./src/index.ts",
+    "./common": "./src/common/index.ts",
+    "./system": "./src/system/index.ts",
+    "./catalog": "./src/catalog/index.ts",
+    "./user": "./src/user/index.ts",
+    "./order": "./src/order/index.ts"
   },
   "scripts": {
     "check-types": "tsc --noEmit"

@@ -1,43 +1,11 @@
-import type { AppType } from '@repo/api';
-import {
-  BizCode,
-  type ApiResponse,
-  type PingRequest,
-  type PingResponse,
-} from '@repo/contracts';
+import type { PingRequest } from '@repo/contracts/system';
 import { Card, CardContent } from '@repo/ui/card';
-import { hc } from 'hono/client';
-import { getServerEnv } from '../env.server';
+import { postPing } from '../lib/api/system/ping';
 
 const rpcPayload: PingRequest = { name: 'web' };
 
-async function getPingResponse(): Promise<ApiResponse<PingResponse>> {
-  const { API_BASE_URL } = getServerEnv();
-  const client = hc<AppType>(API_BASE_URL);
-
-  try {
-    const response = await client.rpc.system.ping.$post({
-      json: rpcPayload,
-    });
-
-    return (await response.json()) as ApiResponse<PingResponse>;
-  } catch (error) {
-    return {
-      ok: false,
-      error: {
-        code: BizCode.SYSTEM_UPSTREAM_TIMEOUT,
-        message: error instanceof Error ? error.message : 'API request failed',
-      },
-      meta: {
-        requestId: 'unavailable',
-        timestamp: new Date().toISOString(),
-      },
-    };
-  }
-}
-
 export default async function Home() {
-  const pingResult = await getPingResponse();
+  const pingResult = await postPing(rpcPayload);
   const requestBody = JSON.stringify(rpcPayload, null, 2);
   const responseBody = JSON.stringify(pingResult, null, 2);
 
