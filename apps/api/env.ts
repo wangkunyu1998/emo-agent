@@ -6,7 +6,7 @@ const apiEnvSchema = z.object({
 
 export type ApiEnv = z.infer<typeof apiEnvSchema>;
 
-export function getApiEnv(bindings: { APP_ENV?: unknown }): ApiEnv {
+export function getApiEnv(bindings: Record<string, unknown>): ApiEnv {
   return apiEnvSchema.parse({
     APP_ENV: bindings.APP_ENV,
   });
