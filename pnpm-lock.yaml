@@ -117,6 +117,9 @@ importers:
 
   apps/api:
     dependencies:
+      '@repo/contracts':
+        specifier: workspace:*
+        version: link:../../packages/contracts
       hono:
         specifier: ^4.12.15
         version: 4.12.15
@@ -172,6 +175,19 @@ importers:
         version: 9.39.1(jiti@2.7.0)
       typescript:
         specifier: 5.9.2
+        version: 5.9.2
+
+  packages/contracts:
+    dependencies:
+      zod:
+        specifier: 'catalog:'
+        version: 4.4.3
+    devDependencies:
+      '@repo/typescript-config':
+        specifier: workspace:*
+        version: link:../typescript-config
+      typescript:
+        specifier: 'catalog:'
         version: 5.9.2
 
   packages/eslint-config:

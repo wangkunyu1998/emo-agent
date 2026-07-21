@@ -1,0 +1,29 @@
+{
+  "success": {
+    "ok": true,
+    "data": {
+      "service": "api",
+      "message": "pong, web"
+    },
+    "meta": {
+      "requestId": "d7c4f4ef-67c3-4f48-90b2-0cb6c6f7ea4f",
+      "timestamp": "2026-04-28T08:00:00.000Z"
+    }
+  },
+  "failure": {
+    "ok": false,
+    "error": {
+      "code": "COMMON.INVALID_REQUEST",
+      "message": "Invalid request payload",
+      "details": {
+        "fieldErrors": {
+          "name": ["String must contain at least 1 character(s)"]
+        }
+      }
+    },
+    "meta": {
+      "requestId": "8c9b0b52-ef80-44d8-b2e1-d40c6b90a40d",
+      "timestamp": "2026-04-28T08:00:01.000Z"
+    }
+  }
+}
